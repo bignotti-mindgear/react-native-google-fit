@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.android.gms.fitness.data.Field.FIELD_BPM;
 import static com.google.android.gms.fitness.data.Field.FIELD_MEAL_TYPE;
 import static com.google.android.gms.fitness.data.HealthFields.FIELD_BLOOD_GLUCOSE_LEVEL;
 import static com.google.android.gms.fitness.data.HealthFields.FIELD_BLOOD_GLUCOSE_SPECIMEN_SOURCE;
@@ -181,13 +182,21 @@ public class HealthHistory {
     }
 
     public boolean saveHeartRate(ReadableMap sample) {
-        this.Dataset = createDataForRequest(
-                this.dataType,
-                DataSource.TYPE_RAW,
-                sample.getDouble("value"),
-                (long)sample.getDouble("date"),
-                TimeUnit.MILLISECONDS
-        );
+        DataSource dataSource = new DataSource.Builder()
+        .setAppPackageName(GoogleFitPackage.PACKAGE_NAME)
+        .setDataType(this.dataType)
+        .setType(DataSource.TYPE_RAW)
+        .build();
+
+        DataSet dataSet = DataSet.create(dataSource);
+        DataPoint dataPoint = dataSet.createDataPoint();
+
+        dataPoint.setTimestamp((long)sample.getDouble("date"), TimeUnit.MILLISECONDS);
+        dataPoint.getValue(FIELD_BPM).setFloat((float) sample.getDouble("value"));
+
+        dataSet.add(dataPoint);
+
+        this.Dataset = dataSet;
         new InsertAndVerifyDataTask(this.Dataset).execute();
 
         return true;
