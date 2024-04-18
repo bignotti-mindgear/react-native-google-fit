@@ -180,7 +180,7 @@ public class HealthHistory {
         return map;
     }
 
-    public boolean saveHealthRate(ReadableMap sample) {
+    public boolean saveHeartRate(ReadableMap sample) {
         this.Dataset = createDataForRequest(
                 this.dataType,
                 DataSource.TYPE_RAW,
