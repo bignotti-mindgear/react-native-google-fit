@@ -46,6 +46,8 @@ public class RecordingApi {
                 return DataType.TYPE_DISTANCE_DELTA;
             case "activity":
                 return DataType.TYPE_ACTIVITY_SEGMENT;
+            case "heart_rate":
+                return DataType.TYPE_HEART_RATE_BPM;
             default:
                 Log.v(TAG, "Unknown data type " + dataTypeName);
                 return null;

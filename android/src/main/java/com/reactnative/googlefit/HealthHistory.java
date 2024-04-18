@@ -154,7 +154,7 @@ public class HealthHistory {
                 .read(this.dataType)
                 .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS);
-                
+
 
         DataReadRequest readRequest = readRequestBuilder.build();
 
@@ -178,6 +178,19 @@ public class HealthHistory {
             }
         }
         return map;
+    }
+
+    public boolean saveHealthRate(ReadableMap sample) {
+        this.Dataset = createDataForRequest(
+                this.dataType,
+                DataSource.TYPE_RAW,
+                sample.getDouble("value"),
+                (long)sample.getDouble("date"),
+                TimeUnit.MILLISECONDS
+        );
+        new InsertAndVerifyDataTask(this.Dataset).execute();
+
+        return true;
     }
 
     public boolean saveBloodGlucose(ReadableMap sample) {

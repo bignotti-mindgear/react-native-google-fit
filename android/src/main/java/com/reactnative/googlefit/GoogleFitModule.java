@@ -499,6 +499,17 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     }
 
     @ReactMethod
+    public void saveHealthRate(ReadableMap healthRateSample, Promise promise) {
+        try {
+            HealthHistory healthHistory = mGoogleFitManager.getHealthHistory();
+            healthHistory.setDataType(HealthDataTypes.TYPE_HEART_RATE_BPM);
+            healthHistory.saveHealthRate(healthRateSample);
+        } catch (Error e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
     public void getHydrationSamples(double startDate,
                                     double endDate,
                                     Promise promise) {
